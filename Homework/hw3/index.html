@@ -1,0 +1,128 @@
+<html>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <body>
+    <h3>Emily Robinson (err78)</h3>
+    <p id="p1">
+      Problem 1:
+      <br />
+      <svg id="svg1" height="400" width="400"></svg>
+
+      <script>
+        let svg = d3.select("svg#svg1");
+
+        svg
+          .append("circle")
+          .attr("cx", 200)
+          .attr("cy", 200)
+          .attr("r", 5)
+          .style("fill", "lightblue");
+
+        svg
+          .append("text")
+          .text("Cornell!")
+          .attr("text-anchor", "middle")
+          .attr("font", "20px Veranda")
+          .attr("fill", "darkred")
+          .attr("x", 200)
+          .attr("y", 200);
+
+        svg
+          .append("rect")
+          .attr("x", 70)
+          .attr("y", 180)
+          .attr("width", 35)
+          .attr("height", 40)
+          .style("stroke", "blue")
+          .style("fill", "lightgrey");
+
+        svg
+          .append("rect")
+          .attr("x", 150)
+          .attr("y", 250)
+          .attr("width", 25)
+          .attr("height", 25)
+          .style("stroke", "red")
+          .style("fill", "yellow");
+
+        svg
+          .append("rect")
+          .attr("x", 250)
+          .attr("y", 250)
+          .attr("width", 10)
+          .attr("height", 20)
+          .style("stroke", "green")
+          .style("fill", "pink");
+      </script>
+    </p>
+    <p id="p2">
+      Problem 2:
+      <br />
+      <svg
+        id="svg2"
+        height="360"
+        width="360"
+        style="border: 1px solid black"
+      ></svg>
+
+      <script>
+        data = [
+          { x: 1.0, y: 1.0 },
+          { x: 2.0, y: 2.0 },
+          { x: 3.0, y: 3.0 },
+          { x: 3.8, y: 5.0 },
+          { x: 4.4, y: 6.4 },
+          { x: 5.8, y: 7.5 },
+          { x: 7.3, y: 8.2 },
+          { x: 8.3, y: 8.7 },
+          { x: 9.3, y: 9.2 },
+        ];
+
+        svg = d3.select("svg#svg2");
+
+        let height = svg.attr("height");
+
+        let width = svg.attr("width");
+
+        let padding = 20;
+
+        let yScale = d3
+          .scaleLinear()
+          .domain([0, 10])
+          .range([height - padding, padding]);
+
+        let xScale = d3
+          .scaleLinear()
+          .domain([0, 10])
+          .range([padding, height - padding]);
+
+        for (let i = 0; i < 12; i++) {
+          svg
+            .append("line")
+            .attr("x1", xScale(i))
+            .attr("x2", xScale(i))
+            .attr("y1", yScale(0))
+            .attr("y2", yScale(10))
+            .style("stroke", "grey");
+
+          svg
+            .append("line")
+            .attr("x1", xScale(0))
+            .attr("x2", xScale(10))
+            .attr("y1", yScale(i))
+            .attr("y2", yScale(i))
+            .style("stroke", "grey");
+        }
+
+        data.forEach((d) => {
+          svg
+            .append("circle")
+            .attr("cx", xScale(d.x))
+            .attr("cy", yScale(d.y))
+            .attr("r", 10)
+            .style("fill", "darkred");
+        });
+      </script>
+    </p>
+  </body>
+</html>
