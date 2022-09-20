@@ -1,0 +1,49 @@
+<html>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <body>
+    <h3>Emily Robinson (err78)</h3>
+    <p id="p1">
+      Problem 1:
+      <br />
+
+      A) <b>Marks:</b> The US map. <b>Channels:</b> Color Hue
+      <!--Ask about this!! Are there any other channels like area?-->
+      <br />
+
+      B) <b>Marks:</b> Circles <b>Channels:</b> Color Hue, aligned vertical
+      position, and aligned horizontal position C) <b>Marks:</b> Light blue
+      rectangles with blue stroke.
+      <!--Do I need to describe their color? When is color a mark?-->
+      <b>Channels:</b> Varied aligned vertical length and aligned horizontal
+      position of the rectangles.
+      <!--Do I need to mention varying? Is it enough to state the channels?-->
+    </p>
+    <p id="p2">
+      Problem 2:
+      <br />
+
+      <svg id="scatterplot" height="500" width="500"></svg>
+
+      <script>
+        d3.json("chip_dataset.json").then((data) => {
+          svg = d3.select("svg#scatterplot");
+        });
+
+        width = svg.attr("width");
+
+        height = svg.attr("height");
+
+        const margins = { top: 10, right: 10, bottom: 50, left: 50 };
+
+        const chartWidth = width - margins.left - margins.right;
+
+        const chartHeight = height - margins.top - margins.bottom;
+
+        let chartArea = svg
+          .append("g")
+          .attr("transform", `translate(${margins.left}, ${margins.top})`);
+      </script>
+    </p>
+  </body>
+</html>
