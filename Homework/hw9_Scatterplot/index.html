@@ -1,0 +1,358 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      .gridlines line {
+        stroke: #bbb;
+      }
+
+      .gridlines .domain {
+        stroke: none;
+      }
+
+      p {
+        word-wrap: break-word;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Emily Robinson (err78)</h3>
+    <p id="A">
+      <!-- Describe what data
+      issues you found and how you fixed them in your <p> tag. Please write an exact count of the number
+      of bad data items you removed. Additionally, after filtering, please print the length of your data array
+      to the console to prove that you’ve got the right number of remaining points. -->
+      <b>Part A:</b>
+      <br />
+      Issues:
+      <br />
+      (1) 'NA' or 'N/A' for region_1 or country (2) empty string for taster_name
+      <br />
+      Fixes: Used d3.filter with (d["region_1"] != 'NA') && (d["region_1"] !=
+      'N/A') && (d["country"] != 'NA') && (d["country"] != 'N/A') &&
+      (d["taster_name"] != "") to remove points that violated these conditions.
+      <br />
+      # Points Removed: 218
+    </p>
+    <p id="B">
+      <b>Part B:</b>
+      <!-- Use the <p> tag to explain the choices you made in designing the
+      axes/scales. We will reward scales/axes that are legible, show the distribution of data clearly (or as
+      clearly as possible), use color effectively, and avoid visual clutter. A good rationale in the <p> for your
+      design will outweigh problems in these areas. -->
+      <br />
+      Design Rationale:
+      <br />
+      - colorScale: I used scaleOrdinal for my color scale since the inputs are
+      categorical not quantitative. In addition, I used d3.schemeCategory10, so
+      I wouldn't have to manually pick the colors.
+      <br />
+      - scales, axes, and gridlines: These mostly followed from lecture. For the
+      x axis, I used a logarithmic scale since there were huge differences
+      between certain prices (e.g. $10 and $100). I used an offset in the scales
+      so points weren't directly on top of the axes. Also, I added 5 to
+      pointsExtent[1], so the y axis' topmost tick would not have the number
+      there so that there wouldn't be a gridline at the top of the chart.
+    </p>
+
+    <p id="C">
+      <b>Part C:</b>
+      <!--In addition to writing about your design rationale for the
+      choices you made in creating circle elements in your <p> tag, please also write 2-3 sentences
+      identifying 1 advantage and 1 disadvantage of this jittering approach to managing overlap.-->
+      <br />
+      Design Rationale:
+      <br />
+      - Circles: I used a join since it takes care of setting attributes and
+      creating the circles at the same time. I set the opacity to 0.5 since it
+      sufficiently reduced the appearance of overlap and made it easier to
+      identify circles that were underneath others.
+      <br />
+      Jittering:
+      <br />
+      - ADVANTAGE: Jittering adds noise to the data, so it decreases the chance
+      that points overlap.
+      <br />
+      - DISADVANTAGE: Jittering is random so doesn't intentionally find values
+      that would optimally minimize overlap.
+    </p>
+
+    <p id="D">
+      <b>Part D:</b>
+      <!--Write 2-3 sentences in your <p> tag describing the possible benefits to users
+      from this approach and identifying places in the chart where it may be ineffective or confusing (or, if
+      you fixed them, what you did to improve the user experience).-->
+      <br />
+      - Position: I fixed the position where the title would show. I showed the
+      title at the top of the chart, since no points were there so little visual
+      noise, making it easier to identify. It would have been ineffective and
+      confusing if I placed it, for instance, in the middle or bottom-left of
+      the chart, since several points are there and would have high visual
+      noise.
+      <br />
+      - Legibility: To increase the legibility of the title, I added a dark grey
+      rectangle behind the text and made the the text white so it would stand
+      out against the rectangle, therefore improving users ability to read and
+      identify the title on the chart upon mouseover.
+    </p>
+
+    <p id="E">
+      <b>Part E:</b>
+      <br />
+      I seperated the legend items with spaces, so it's easier to read. They
+      were placed at the bottom of the chart and left horizontal, since it's
+      easier to use the mouseover in that configuration than vertically in my
+      experience.
+    </p>
+
+    <!--Part A:-->
+    <div>
+      <svg id="scatter" height="500" width="800"></svg>
+      <div id="legend"></div>
+    </div>
+
+    <script>
+      //        Is there a relationship between the price of wines and their point scores (i.e. quality)?
+      // - Are some wine regions better or more expensive than others?
+      const genPlot = async () => {
+        //part A:
+
+        var svg = d3.select("svg#scatter");
+        var width = svg.attr("width");
+        var height = svg.attr("height");
+
+        var margins = { top: 10, bottom: 50, left: 50, right: 10 };
+
+        const chartArea = svg
+          .append("g")
+          .attr("class", "scatter")
+          .attr("transform", `translate(${margins.left},${margins.top})`);
+
+        const chartWidth = width - margins.left - margins.right;
+
+        const chartHeight = height - margins.top - margins.bottom;
+
+        const ySide = svg
+          .append("g")
+          .attr("transform", `translate(${margins.left - 2},${margins.top})`);
+
+        const xSide = svg
+          .append("g")
+          .attr(
+            "transform",
+            `translate(${margins.left},${chartHeight + 2 + margins.top})`
+          );
+
+        var old_data = await d3.json("wines.json");
+
+        //why doesn't autotype work here?
+
+        // [country, points, price, region_1, state, taster_name, title, variety, winery]
+
+        // correct the types
+        old_data.forEach((d) => {
+          d.points = Number(d.points);
+          d.price = Number(d.price.slice(1));
+        });
+
+        console.log(old_data);
+
+        //filter-out and print num of bad points
+
+        var data = old_data.filter(
+          (d) =>
+            d["region_1"] != "NA" &&
+            d["region_1"] != "N/A" &&
+            d["country"] != "NA" &&
+            d["country"] != "N/A" &&
+            d["taster_name"] != ""
+        );
+        // console.log(old_data.length - data.length);
+        console.log("new data size", data.length);
+
+        // Part B:
+
+        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+        //scales for price and points
+        const priceExtent = d3.extent(data, (d) => d.price);
+        const pointsExtent = d3.extent(data, (d) => d.points);
+
+        //did this so the top-most empty tick shows in the y-axis.
+        pointsExtent[1] = pointsExtent[1] + 5;
+
+        //offset so points aren't right on axes
+        let offset = margins.left / 2;
+        const xScale = d3
+          .scaleSymlog()
+          .domain(priceExtent)
+          .range([offset, chartWidth - offset]);
+
+        const yScale = d3
+          .scaleLinear()
+          .domain(pointsExtent)
+          .range([chartHeight - offset, 0]);
+
+        //axis
+        const yAxis = d3.axisLeft(yScale);
+        const xAxis = d3.axisBottom(xScale);
+
+        ySide.append("g").attr("class", "y axis").call(yAxis);
+
+        xSide.append("g").attr("class", "x axis").call(xAxis);
+
+        //gridlines
+
+        const yGrid = d3.axisLeft(yScale).tickSize(-chartWidth).tickFormat(""); //check
+
+        const xGrid = d3
+          .axisBottom(xScale)
+          .tickSize(-chartHeight - margins.top)
+          .tickFormat("");
+
+        ySide.append("g").attr("class", "y gridlines").call(yGrid);
+
+        xSide.append("g").attr("class", "x gridlines").call(xGrid);
+
+        //why use call instead of .attr(d, yAxis)?
+
+        // Part C:
+
+        function jitter() {
+          return d3.randomUniform(-4, 4)(); //check if this is the best
+        }
+        // x = price
+        // y = points
+
+        const r = 6;
+        const circles = chartArea
+          .selectAll("circle.pt")
+          .data(data)
+          .join("circle")
+          .attr("class", "pt")
+          .attr("cx", (d) => xScale(d.price) + jitter())
+          .attr("cy", (d) => yScale(d.points) + jitter())
+          .attr("r", r)
+          .attr("opacity", 0.5)
+          .style("fill", (d) => colorScale(d.state))
+          .on("mouseover", mouseEnter)
+          .on("mouseout", mouseExit); //change this later
+
+        // (d) => colorScale(d.state)
+        chartArea.raise();
+
+        //Part D:
+
+        //Mouseover lecs to refer to:
+        //https://jeffrz.github.io/info3300-fa2022/notes/22.10.03.notes.htm
+
+        // https://jeffrz.github.io/info3300-fa2022/notes/22.10.19.notes.htm
+
+        //https://jeffrz.github.io/info3300-fa2022/notes/22.09.26.notes.htm
+
+        // https://jeffrz.github.io/info3300-fa2022/notes/22.10.17.notes.htm
+
+        let tooltipWidth = 200;
+        let tooltipHeight = 100;
+
+        let tooltip = chartArea
+          .append("g")
+          .attr("class", "tooltip")
+          .style("visibility", "hidden");
+
+        tooltip
+          .append("rect")
+          .attr("fill", "darkgrey")
+          .attr("id", "back")
+          .attr("opacity", 0.9)
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", chartWidth)
+          .attr("height", 30);
+
+        // console.log(tooltip);
+
+        //find a way to display in corner and wrap.
+        var txt = tooltip
+          .append("text")
+          .style("fill", "white")
+          .attr("x", 10)
+          .attr("y", 20);
+
+        function mouseEnter() {
+          let curr = d3.select(this);
+
+          console.log("entered");
+          let title = curr.datum().title;
+
+          // console.log(title);
+
+          txt.text(title);
+
+          curr
+            .attr("r", r + 4)
+            .attr("stroke", "black")
+            .attr("stroke-width", 3);
+
+          tooltip.style("visibility", "visible");
+        }
+
+        function mouseExit() {
+          let curr = d3.select(this);
+
+          curr.attr("r", r).attr("stroke", "none").attr("stroke-width", 0);
+          tooltip.style("visibility", "hidden");
+        }
+
+        //Part E:
+        var items = colorScale.domain();
+
+        var div = d3.select("div#legend");
+
+        var spans = div
+          .selectAll("span#items")
+          .data(items)
+          .join("span")
+          .text((d) => d)
+          .style("color", (d) => colorScale(d))
+          .attr("id", "legend")
+          .on("mouseover", mouseEnterLegend);
+
+        // spans.append("br");
+        //create space between legend titles
+        spans.append("text").text(" ");
+
+        div.append("span").text("Clear").on("mouseover", mouseEnterLegend);
+
+        function mouseEnterLegend() {
+          let curr_leg = d3.select(this);
+
+          // console.log(curr_leg.text());
+
+          if (curr_leg.text() == "Clear") {
+            circles.attr("opacity", 0.5);
+            console.log("cleared");
+          } else {
+            let leg_color = curr_leg.style("color");
+
+            // console.log(leg_color);
+
+            let pts = circles._groups[0].map((d) => d3.select(d));
+
+            pts.forEach((pt) => {
+              // console.log(pt.style("fill"));
+              if (pt.style("fill") != leg_color) {
+                pt.attr("opacity", 0.07);
+              } else pt.attr("opacity", 0.5);
+            });
+
+            // console.log("hasLeg", hasLeg);
+          }
+        }
+      };
+
+      genPlot();
+    </script>
+  </body>
+</html>

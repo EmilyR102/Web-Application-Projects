@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+
+  <body>
+    <h3>Emily Robinson (err78)</h3>
+    <p id="p1"></p>
+    <div id="barcodes"></div>
+    <script>
+      genBars = async () => {
+        movies = await d3.json("movie_barcodes.json", d3.autoType);
+
+        var barcodes = d3.select("div#barcodes");
+
+        //divs
+        const bars = barcodes
+          .selectAll("div#bars")
+          .data(movies)
+          .join("div")
+          .attr("id", "bars");
+
+        // console.log(bars);
+
+        bars.append("h5").text((m) => m.title);
+        const cans = bars
+          .append("canvas")
+          .attr("width", 800)
+          .attr("height", 100);
+
+        // console.log(cans);
+
+        cans.each(function (movie) {
+          // console.log(movie);
+          let canvas = d3.select(this);
+
+          // console.log(canvas);
+
+          let context = canvas.node().getContext("2d");
+
+          movie.bars.forEach((b) => {
+            let x = b.x + 0.5;
+            let y = 0;
+            let color = b.color;
+
+            context.strokeStyle = color;
+            context.beginPath();
+
+            context.moveTo(x, canvas.attr("height"));
+            context.lineTo(x, 0);
+
+            context.stroke();
+          });
+        });
+      };
+
+      genBars();
+    </script>
+  </body>
+</html>

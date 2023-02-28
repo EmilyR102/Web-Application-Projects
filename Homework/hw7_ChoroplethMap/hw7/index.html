@@ -1,0 +1,164 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+  </head>
+
+  <body>
+    <!--Steps E and F are especially tricky.
+
+      dataset.objects.state //state outlines
+
+      dataset.objects.zip_codes
+
+      dataset.objects.zip_codes.geometries[0].properties
+
+      GOAL: 
+      - coloring zip codes based on the median_income property.
+  
+      - create a sequential color scale and bin income levels into quintiles (5 bins)
+    
+    -->
+    <h3>Emily Robinson (err78)</h3>
+    <p id="p1">
+      Problem 1:
+      <br />
+    </p>
+    <!--Part A:-->
+    <svg id="choropleth" height="770" width="990" style="margin: 20px"></svg>
+
+    <ul id="items"></ul>
+    <script>
+      const drawMap = async function () {
+        //Part A:
+        let svg = d3.select("#choropleth");
+
+        let width = +svg.attr("width");
+
+        let height = +svg.attr("height");
+        // console.log(width, height)
+
+        // https://coolors.co/fff7ad-ffcd70-ff7092-cc0069-89023e
+
+        const colors = ["#89023E","#CC0069","#FF7092","#FCAF21","#F0D993" ] //darker -> higher median income
+
+        let nyincome = await d3.json("ny_income.topo.json");
+
+        // console.log("nyincome", nyincome);
+
+        var zips = topojson.feature(nyincome, nyincome.objects.zip_codes); // List of zip outlines to fill
+
+        var zipsMesh = topojson.mesh(nyincome, nyincome.objects.zip_codes);
+
+        var statesMesh = topojson.mesh(nyincome, nyincome.objects.state); // 'Mesh' of all outlines put together for a stroke
+
+        // console.log("zips",zips);
+        // console.log(zipsMesh);
+        // console.log(statesMesh);
+
+        var projection = d3.geoMercator().fitSize([width, height], zips);
+        // console.log(projection([42.4476, -76.4]))
+
+        const path = d3.geoPath().projection(projection);
+
+        // console.log("pathgen", path);
+
+        // though you must manually specify each color and cite them.
+
+        //Part B:
+        const income = d3.map(
+          nyincome.objects.zip_codes.geometries,
+          (d) => d.properties.median_income
+        );
+
+        // console.log("income arr", income);
+
+        const colorScale = d3.scaleQuantile().domain(income).range(colors);
+
+        //Part C:
+        const viewport = svg.append("g");
+
+        // console.log(zips.features);
+
+        viewport
+          .selectAll("path.zips")
+          .data(zips.features)
+          .join("path")
+          .attr("class", "zips")
+          .style("fill", (d) => colorScale(d.properties.median_income))
+          .attr("d", path);
+
+        const zMesh = viewport
+          .append("path")
+          .datum(zipsMesh)
+          .attr("class", "zip-outline")
+          .style("fill", "none")
+          .style("stroke", "white")
+          .style("stroke-width", 1)
+          .attr("d", path);
+
+        const sMesh = viewport
+          .append("path")
+          .datum(statesMesh)
+          .attr("class", "state-outline")
+          .style("fill", "none")
+          .style("stroke", "darkgrey")
+          .style("stroke-width", 3)
+          .attr("d", path);
+
+        //Part D:
+
+        //projection([longitude,latitude])
+        const cornell = projection([-76.4850, 42.4476]);
+
+        console.log(cornell[0]);
+
+        //not showing up
+        const circ = viewport
+          .append("circle")
+          .attr("r", 5)
+          .attr("cx", cornell[0])
+          .attr("cy", cornell[1])
+          .style("fill", "black");
+
+        console.log(circ);
+
+        // console.log(viewport);
+
+        //Part E:
+        function viewZoomed({ transform }) {
+          viewport.attr("transform", transform.toString());
+
+          //keep stroke widths consistent
+          viewport
+            .select(".state-outline")
+            .style("stroke-width", 3 / transform.k);
+
+          viewport
+            .select(".zip-outline")
+            .style("stroke-width", 1 / transform.k);
+        }
+
+        var zoom = d3.zoom().scaleExtent([1, 19]).on("zoom", viewZoomed);
+
+        svg.call(zoom);
+
+        const thresholds = colorScale.quantiles();
+
+        console.log("thresholds", thresholds);
+
+        const ul = d3.select("#items");
+
+        // console.log(ul);
+
+        const f = d3.format(".1f");
+        ul.selectAll("li")
+          .data(thresholds)
+          .join("li")
+          .text((d) => f(d));
+      };
+
+      drawMap();
+    </script>
+  </body>
+</html>

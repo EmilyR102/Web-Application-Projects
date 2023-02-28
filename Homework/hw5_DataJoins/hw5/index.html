@@ -1,0 +1,153 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      .gridlines line {
+        stroke: #bbb;
+        /*Makes grid lines lighter*/
+      }
+
+      .gridlines .domain {
+        stroke: none;
+        /*Makes extra grid lines on axes invisible*/
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Emily Robinson (err78)</h3>
+    <p id="p1">Problem 1:</p>
+    <br />
+    <ul>
+      <li>
+        A: (a) divergent; (b)This is ineffective as there are too many colors in
+        the scale, making it confusing to discern data values. For example, blue
+        blended with the red makes purple. Furthermore, the scale appears
+        perceptually uniform, but isn't aesthetically appealing.
+      </li>
+      <li>
+        B: It's effective since the middle always remains the same color, so it
+        is consistently perceived as the center from which the other two colors
+        diverge from. This is a divergent scale, which is great for instances
+        where there is a middle (neutral in this case).
+      </li>
+      <li>
+        C: I used this site
+        https://pilestone.com/pages/color-blindness-simulator-1
+        <ul>
+          <li>Deuteranomaly</li>
+          <li>Deuteranopia</li>
+          <li>
+            Protanomaly: Although, there is a small difference in this case.
+            They'll see greyish-blue to lime green.
+          </li>
+          <li>
+            Protanopia: They'll still see a scale, but from grey to yellow.
+          </li>
+          <li>Tritanomaly</li>
+          <li>Tritanopia</li>
+          <li>Achromatopsia</li>
+          <li>Blue Cone Monochromacy</li>
+        </ul>
+      </li>
+      <li>
+        D: They shouldn't use a rainbow scale since it's visually jarring, makes
+        it difficult to discern an order in the data, and could appear ugly when
+        perceptually uniform.
+      </li>
+    </ul>
+    <p id="p2">Problem 2:</p>
+    <svg
+      id="svg1"
+      width="500"
+      height="500"
+      style="background-color: black"
+    ></svg>
+
+    <script>
+      d3.csv("NCAA_shots.csv", d3.autoType).then((data) => {
+        svg = d3.select("svg#svg1");
+
+        // console.log(svg);
+
+        // console.log(data[0]);
+
+        data.forEach((d) => {
+          d.x *= 5;
+          d.y *= 5;
+          d.width *= 5;
+          d.height *= 5;
+        });
+        // console.log(data);
+
+        attemptExtent = d3.extent(data, (d) => d.log_attempt);
+
+        let colorScale = d3
+          .scaleSequential()
+          .domain(attemptExtent)
+          .range([d3.rgb("#a008f2"), d3.rgb("#f9d6ec")])
+          .interpolator(d3.interpolateViridis);
+
+        svg
+          .selectAll("rect")
+          .data(data)
+          .join("rect")
+          .attr("x", (d) => d.x)
+          .attr("y", (d) => d.y)
+          .attr("width", (d) => d.width)
+          .attr("height", (d) => d.height)
+          .attr("fill", (d) => colorScale(d.log_attempt));
+      });
+    </script>
+
+    <p id="p3">Problem 3:</p>
+    <svg id="svg2" width="420" height="420"></svg>
+    <br />
+    <input type="range" min="0" max="200" step="1" />
+    <!-- <label for="volume">Lightness</label> -->
+
+    <script>
+      objects = [];
+
+      for (let i = 0; i < 21; i++) {
+        for (let j = 0; j < 21; j++) {
+          objects.push({ h: 18 * i, c: 5 * j });
+        }
+      }
+      // console.log(objects);
+      // console.log(objects.length);
+      svg2 = d3.select("svg#svg2");
+
+      cxScale = d3.scaleLinear().domain([0, 360]).range([10, 410]);
+
+      cyScale = d3.scaleLinear().domain([0, 100]).range([410, 10]);
+
+      function showCircles(lightness) {
+        let circles = svg2
+          .selectAll("circle")
+          .data(objects)
+          .join("circle")
+          .attr("cx", (d) => cxScale(d.h))
+          .attr("cy", (d) => cyScale(d.c))
+          .attr("r", 10)
+          .attr("stroke", "none")
+          .attr("fill", (d) => d3.hcl(d.h, d.c, lightness));
+      }
+
+      light = d3.select("input");
+      // console.log("this", this);
+
+      // console.log(light);
+
+      showCircles(100); //default value for light slider range
+
+      light.on("input", function () {
+        let value = d3.select(this).property("value");
+
+        // console.log(value);
+
+        showCircles(value);
+      });
+    </script>
+  </body>
+</html>

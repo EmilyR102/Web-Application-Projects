@@ -1,0 +1,160 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      .gridlines line {
+        stroke: #bbb;
+        /*Makes grid lines lighter*/
+      }
+
+      .gridlines .domain {
+        stroke: none;
+        /*Makes extra grid lines on axes invisible*/
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Emily Robinson (err78)</h3>
+    <p id="p1">
+      Problem 1:
+      <br />
+
+      A) <b>Marks:</b> The polygon shapes inside each state outline.
+      <b>Channels:</b> Color Hue, unaligned vertical position, and unaligned
+      horizontal position. My reasoning for unaligned is that the polygons'
+      positions don't share the same horizontal scale and vertical scale.
+      <!--Ask about this!! Are there any other channels like area?-->
+      <br />
+
+      B) <b>Marks:</b> Circles <b>Channels:</b> Color hue, aligned vertical
+      position, and aligned horizontal position
+
+      <br />
+      C) <b>Marks:</b> Rectangles
+      <!--Do I need to describe their color? When is color a mark?-->
+      <b>Channels:</b> Aligned vertical length and aligned horizontal position
+      <!--Do I need to mention varying? Is it enough to state the channels?-->
+    </p>
+    <p id="p2">
+      Problem 2:
+      <br />
+
+      <svg id="scatterplot" height="500" width="500"></svg>
+
+      <script>
+        // 2a. load dataset
+        d3.json("chip_dataset.json").then((data) => {
+          console.log("inside");
+          svg = d3.select("svg#scatterplot");
+          //Is this creating an svg element?
+
+          width = svg.attr("width");
+
+          height = svg.attr("height");
+
+          // 2b. create chartWidth, chartHeight, and chartArea
+
+          const margins = { top: 10, right: 10, bottom: 50, left: 50 };
+
+          const chartWidth = width - margins.left - margins.right;
+
+          const chartHeight = height - margins.top - margins.bottom;
+
+          let chartArea = svg
+            .append("g")
+            .attr("transform", `translate(${margins.left}, ${margins.top})`);
+
+          // 2 scales for Release Day and Transistors(million)
+
+          const releaseExtent = d3.extent(data, (d) => d["Release Day"]);
+
+          const xScale = d3
+            .scaleLinear()
+            .domain(releaseExtent)
+            .range([0, chartWidth]);
+          //why 0 and not margins.left??
+
+          const transExtent = d3.extent(data, (d) => d["Transistors(million)"]);
+
+          const yScale = d3
+            .scaleLog()
+            .domain(transExtent)
+            .range([chartHeight, 0]);
+          // .scaleLinear() used to be this but Moores law requires log in assignment.
+
+          //2c axis and grid lines
+
+          //left grid lines and axis
+
+          let axisLeft = d3.axisLeft(yScale);
+          //Is a left axis label generator. When called, it'll paste the axis labels.
+
+          svg
+            .append("g")
+            .attr("class", "y axis")
+            .attr(
+              "transform",
+              `translate(${margins.left - 10}, ${margins.top})`
+            )
+            .call(axisLeft);
+
+          //Do we need to add 10 and subtract 10?
+
+          let yGridLines = d3
+            .axisLeft(yScale)
+            .tickSize(-chartWidth - 10)
+            .tickFormat("");
+
+          svg
+            .append("g")
+            .attr("class", "y gridlines")
+            .attr(
+              "transform",
+              `translate(${margins.left - 10}, ${margins.top})`
+            )
+            .call(yGridLines);
+
+          //bottom grid lines and axis
+
+          let axisBottom = d3.axisBottom(xScale);
+
+          svg
+            .append("g")
+            .attr("class", "x axis")
+            .attr(
+              "transform",
+              `translate(${margins.left}, ${margins.top + chartHeight + 10})`
+            )
+            .call(axisBottom);
+
+          let xGridLines = d3
+            .axisBottom(xScale)
+            .tickSize(-chartHeight - 10)
+            .tickFormat("");
+
+          svg
+            .append("g")
+            .attr("class", "x gridlines")
+            .attr(
+              "transform",
+              `translate(${margins.left}, ${margins.top + chartHeight + 10})`
+            )
+            .call(xGridLines);
+
+          //2D inputting data points
+
+          data.forEach((d) => {
+            chartArea
+              .append("circle")
+              .attr("cx", xScale(d["Release Day"]))
+              .attr("cy", yScale(d["Transistors(million)"]))
+              .attr("r", 3)
+              .attr("opacity", 0.3)
+              .style("fill", "#1a364e");
+          });
+        });
+      </script>
+    </p>
+  </body>
+</html>

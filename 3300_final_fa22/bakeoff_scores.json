@@ -1,0 +1,44 @@
+[
+  {
+    "start_age": 17,
+    "end_age": 19,
+    "num_competitors": 4,
+    "overall_score": 71.25,
+    "technique_score": 54.75
+  },
+  {
+    "start_age": 20,
+    "end_age": 29,
+    "num_competitors": 30,
+    "overall_score": 67.4,
+    "technique_score": 34.6
+  },
+  {
+    "start_age": 30,
+    "end_age": 39,
+    "num_competitors": 43,
+    "overall_score": 54.69767442,
+    "technique_score": 29.18604651
+  },
+  {
+    "start_age": 40,
+    "end_age": 49,
+    "num_competitors": 21,
+    "overall_score": 58.14285714,
+    "technique_score": 34.23809524
+  },
+  {
+    "start_age": 50,
+    "end_age": 59,
+    "num_competitors": 10,
+    "overall_score": 30.4,
+    "technique_score": 13.8
+  },
+  {
+    "start_age": 60,
+    "end_age": 71,
+    "num_competitors": 12,
+    "overall_score": 59.58333333,
+    "technique_score": 24.08333333
+  }
+]

@@ -1,0 +1,170 @@
+<html>
+<head>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+ 	<script src="https://d3js.org/topojson.v3.min.js"></script>
+  <style>
+    /* Avoid overflowing text */
+    .answer {
+      width: 500px;
+    }
+    /* Make the gridlines lighter in #7 and #8 */
+    .gridlines line {
+      stroke: #CCC;
+    }
+    /* Hide the domain lines when drawing gridlines for #7 and #8 */
+    .gridlines .domain {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="header">
+    <h5>
+      <!--- PUT YOUR NAME AND NETID HERE --->
+      Emily Robinson (err78)
+    </h5>
+  </div>
+  
+  <div class="answer">
+    <h5>#1</h5>
+    <!--- Your answer goes here --->
+    <p>A: black circles</p>
+    <p>B:</p>
+    <ul>
+      <li>Population: Quantitative </li>
+      <li>City: Nominal</li>
+    </ul>
+    <p>C: </p>
+    <ul>
+      <li>Population: Aligned horizontal position</li>
+      <li>City: Aligned vertical position</li>
+    </ul>
+    <p>D: I believe this is effective since the seperation of the graph at the scale break immediately and clearly tells viewers that there is a break in the time line, since there eyes will have to cross that small gap, making it easier for them to meaningfully read the graph as its designer intended. </p>
+    
+  </div>
+  
+  <div class="answer">
+    <h5>#2</h5>
+    <!--- Your answer goes here --->
+    <p> A: Polygon shapes (dog silhouette) </p>
+    <p> B:</p>
+    <ul>
+      <li> Popularity: Quantitative</li>
+      <li> AKC Dog group: Nominal </li>
+    </ul>
+    <p> C:</p>
+    <ul>
+      <li> Popularity: aligned vertical position
+      </li>
+      <li>"Our Data Score": aligned horizontal position</li>
+      <li>AKC Dog group: Color</li>
+    </ul>
+    <p> D: There's heavy overlap in some places which makes it hard to distinguish between the dogs, and we don't know where exactly the value is (center, upper right corner, etc. of dog), so it can be confusing.</p>
+  </div>
+  
+  <div class="answer">
+    <h5>#3</h5>
+    <!--- Your answer goes here --->
+    <p>A:</p>
+    <ul>
+      <li>Domain Area: Nominal</li>
+      <li>Regional priorities: Quantitative</li>
+      <li>Capital Investment: Quantitative</li>
+    </ul>
+    <p>B:</p>
+    <ul>
+      <li> Domain Area: Color</li>
+      <li> Regional priorities: Aligned Horizontal Position</li>
+      <li> Capital Investment: Volume </li>
+    </ul>
+    <p>C:</p>
+    The lines that connect the spheres to their shadows (circles under each sphere) help viewers see where each sphere is positioned in the graph. One can look at a sphere and follow it's line and see where it intersects the "Global level" axis for example.
+
+  </div>  
+  
+  <div class="answer">
+    <h5>#4</h5>
+    <!--- Your answer goes here --->
+    <p>A: False</p>
+    <p>B: False</p>
+    <p>C: False</p> 
+    <p>D: True </p> 
+    <p>E: False</p> 
+    <p>F: True </p> 
+  </div>  
+  
+  <div class="answer">
+    <h5>#5</h5>
+    <!--- Your answer goes here --->
+    <ol>
+      <li>Unaligned Position</li>
+      <li>Aligned Length</li>
+      <li>Angle/Tilt</li>
+      <li>Color Saturation</li>
+      <li>Volume</li>
+    </ol>
+  </div>  
+  
+  <div class="answer">
+    <h5>#6</h5>
+    <!--- Your answer goes here --->
+    <p>A: Adjacency matrix</p>
+    <p>B:</p>
+    <ul>
+      <li>Nodes: rows and columns with a cell between them in the table. Lines </li>
+      <li>Edges: The cells where nodes intersect. </li>
+    </ul>
+    <p> C: </p>
+    <ul>
+      <li>Advantage: If you sort the adjacency matrix, you can see emergent structures that can make squares or certain parts of the graph standout more. 
+      </li>
+      <li>
+        Disadvantage: If you shuffle the order, it could remove meaningful structures and appear very jumbled, which makes it difficult to identify patterns or connections and make sense of the graph. 
+      </li>
+    </ul>
+  </div>  
+  
+  
+  <div class="answer">
+    <h5>#7</h5>
+    <svg width="700" height="400" id="olympic" style="border:1px solid #ccc"></svg>
+    
+    <!--- Modify 7.js in order to answer this problem --->
+    <script type="text/javascript" src="7.js"></script>
+  </div>
+  
+  
+  <div class="answer">
+    <h5>#8</h5>
+    <svg width="700" height="400" id="bakeoff" style="border:1px solid #ccc"></svg>
+    
+    <!--- Modify 8.js in order to answer this problem --->
+    <script type="text/javascript" src="8.js"></script>
+  </div>
+  
+  <div class="answer">
+    <h5>#9</h5>
+    <svg width=600 height=600 id="network" style="border:1px solid #eee">
+      <path d="M240,300a60,60 0 1,0 120,0a60,60 0 1,0 -120,0" stroke="#eee" stroke-width=30 fill=none />  
+      <path d="M180,300a120,120 0 1,0 240,0a120,120 0 1,0 -240,0" stroke="#eee" stroke-width=30 fill=none />
+      <path d="M120,300a180,180 0 1,0 360,0a180,180 0 1,0 -360,0" stroke="#eee" stroke-width=30 fill=none />
+      <path d="M60,300a240,240 0 1,0 480,0a240,240 0 1,0 -480,0" stroke="#eee" stroke-width=30 fill=none />  
+    </svg>
+    
+    <!--- Modify 9.js in order to answer this problem --->
+    <script type="text/javascript" src="9.js"></script>
+  </div>
+  
+  
+  <div class="answer">
+  <h5>#10</h5>
+    <svg width=900 height=600 id="map" style="border:1px solid #eee"></svg>
+    
+    <!--- Modify 10.js in order to answer this problem --->
+    <script type="text/javascript" src="10.js"></script>
+  </div>
+
+    
+</body>
+</html>

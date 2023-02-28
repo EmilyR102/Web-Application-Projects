@@ -1,0 +1,153 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      .gridlines line {
+        stroke: #bbb;
+        /*Makes grid lines lighter*/
+      }
+
+      .gridlines .domain {
+        stroke: none;
+        /*Makes extra grid lines on axes invisible*/
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Emily Robinson (err78)</h3>
+    <p id="p1">Problem 1:</p>
+
+    <svg id="svg1" width="800" height="400"></svg>
+
+    <script>
+      svg = d3.select("svg#svg1");
+      let annotations = svg.append("g").attr("id", "annotations");
+
+      const margin = { top: 10, right: 10, bottom: 30, left: 30 };
+
+      chartArea = svg
+        .append("g")
+        .attr("id", "points")
+        .attr("transform", `translate(${margin.left},  ${margin.top})`);
+
+      const width = svg.attr("width");
+      const height = svg.attr("height");
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+
+      d3.json("mariokart_records.json", d3.autoType).then((data) => {
+        // console.log(d);
+
+        const timeParser = d3.timeParse("%Y-%m-%d");
+
+        data.earliest_date = timeParser(data.earliest_date);
+        data.latest_date = timeParser(data.latest_date);
+
+        console.log(data.earliest_date);
+
+        data["timeseries"].forEach((t) =>
+          t.values.forEach((v) => (v.date = timeParser(v.date)))
+        ); //it still kept the time
+
+        // console.log(data["timeseries"]);
+
+        const scaleTime = d3
+          .scaleTime()
+          .domain([data.earliest_date, data.latest_date])
+          .range([10, chartWidth]);
+
+        // console.log(scaleTime)
+
+        const scaleValues = d3
+          .scaleLinear()
+          .domain([data.min_value, data.max_value])
+          .range([chartHeight + margin.top - 10, 0]);
+
+        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+        let yAxis = d3.axisLeft(scaleValues);
+
+        annotations
+          .append("g")
+          .attr("class", "y axis")
+          .attr("transform", `translate(${margin.left},${margin.top})`)
+          .call(yAxis);
+
+        let leftGridlines = d3
+          .axisLeft(scaleValues)
+          .tickSize(-chartWidth)
+          .tickFormat("");
+
+        annotations
+          .append("g")
+          .attr("class", "y gridlines")
+          .attr("transform", `translate(${margin.left},${margin.top})`)
+          .call(leftGridlines);
+
+        let xAxis = d3.axisBottom(scaleTime);
+
+        annotations
+          .append("g")
+          .attr("class", "x axis")
+          .attr(
+            "transform",
+            `translate(${margin.left},${chartHeight + margin.top + 10})`
+          )
+          .call(xAxis);
+
+        let bottomGridlines = d3
+          .axisBottom(scaleTime)
+          .tickSize(-chartHeight - 10)
+          .tickFormat("");
+
+        annotations
+          .append("g")
+          .attr("class", "x gridlines")
+          .attr(
+            "transform",
+            `translate(${margin.left},${chartHeight + margin.top + 10})`
+          )
+          .call(bottomGridlines);
+
+        //line generator tells what to do when given points to make a path
+
+        var lineGen = d3
+          .line()
+          .x((v) => scaleTime(v["date"]))
+          .y((v) => scaleValues(v["record_time"]))
+          .curve(d3.curveMonotoneX); // this configures whether straight lines connect your data points
+        //  or if it blends between points using a curve; see d3.line docs
+
+        series = chartArea
+          .selectAll("g.series")
+          .data(data.timeseries)
+          .join("g")
+          .attr("class", "series")
+          .style("stroke", (t) => colorScale(t.track));
+
+        console.log(chartArea);
+        console.log(series);
+
+        series
+          .append("path")
+          .data(data.timeseries)
+          .attr("class", "line")
+          .attr("fill", "none")
+          .attr("stroke-width", 2)
+          .attr("d", (t) => lineGen(t.values));
+        // using attr here, style would work too
+        // .datum has given our entire dataset to the <path> element
+
+        series
+          .selectAll("circle")
+          .data((t) => t.values)
+          .join("circle")
+          .attr("r", 2)
+          .attr("cx", (v) => scaleTime(v.date)) // 0 because we have a translate() on the <g> tag for x location
+          .attr("cy", (v) => scaleValues(v.record_time))
+          .attr("fill", (v) => colorScale(v.track));
+      });
+    </script>
+  </body>
+</html>

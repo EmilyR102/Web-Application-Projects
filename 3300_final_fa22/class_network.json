@@ -1,0 +1,785 @@
+{
+  "nodes": [
+    {
+      "course": "INFO1100",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 1,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO1200",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 1,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO1300",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 1,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO1305",
+      "pre-reqs": [],
+      "crosslist": [
+        "CS1305"
+      ],
+      "level": 1,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO2040",
+      "pre-reqs": [],
+      "crosslist": [
+        "CS2850"
+      ],
+      "level": 2,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO2300",
+      "pre-reqs": [
+        "INFO1300"
+      ],
+      "crosslist": [
+        "CS2300"
+      ],
+      "level": 2,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO2450",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 2,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO2750",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 2,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO2950",
+      "pre-reqs": [
+        "CS1112"
+      ],
+      "crosslist": [],
+      "level": 2,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO3140",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 3,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO3152",
+      "pre-reqs": [
+        "CS2110",
+        "INFO2450"
+      ],
+      "crosslist": [],
+      "level": 3,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO3300",
+      "pre-reqs": [
+        "INFO2300",
+        "CS2110"
+      ],
+      "crosslist": [
+        "CS3300"
+      ],
+      "level": 3,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO3350",
+      "pre-reqs": [
+        "CS2110"
+      ],
+      "crosslist": [],
+      "level": 3,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO3450",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 3,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4120",
+      "pre-reqs": [
+        "CS1112"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4152",
+      "pre-reqs": [
+        "INFO3152",
+        "INFO3300"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4154",
+      "pre-reqs": [
+        "CS2110"
+      ],
+      "crosslist": [
+        "CS4154"
+      ],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4220",
+      "pre-reqs": [
+        "INFO2040",
+        "CS2800"
+      ],
+      "crosslist": [
+        "CS4852"
+      ],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4240",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4250",
+      "pre-reqs": [
+        "INFO1200"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4300",
+      "pre-reqs": [
+        "CS2800",
+        "CS2110"
+      ],
+      "crosslist": [
+        "CS4300"
+      ],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4310",
+      "pre-reqs": [
+        "INFO3300"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4320",
+      "pre-reqs": [
+        "INFO2300"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4340",
+      "pre-reqs": [
+        "INFO2300",
+        "INFO3450"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4360",
+      "pre-reqs": [
+        "INFO2450",
+        "INFO2040"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4410",
+      "pre-reqs": [
+        "INFO4320"
+      ],
+      "crosslist": [
+        "CS4754"
+      ],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4420",
+      "pre-reqs": [
+        "INFO2450",
+        "INFO2040"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4430",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4450",
+      "pre-reqs": [
+        "INFO2450"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "INFO4561",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "INFO"
+    },
+    {
+      "course": "CS1110",
+      "pre-reqs": [],
+      "crosslist": [
+        "CS1112",
+        "CS1115"
+      ],
+      "level": 1,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS1380",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 1,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS1610",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 1,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS2024",
+      "pre-reqs": [
+        "CS1110"
+      ],
+      "crosslist": [],
+      "level": 2,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS2043",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 2,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS2110",
+      "pre-reqs": [
+        "CS1110"
+      ],
+      "crosslist": [],
+      "level": 2,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS2800",
+      "pre-reqs": [
+        "CS1110"
+      ],
+      "crosslist": [],
+      "level": 2,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS3110",
+      "pre-reqs": [
+        "CS2110"
+      ],
+      "crosslist": [],
+      "level": 3,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS3410",
+      "pre-reqs": [
+        "CS2110",
+        "CS2024"
+      ],
+      "crosslist": [
+        "CS3420"
+      ],
+      "level": 3,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS3758",
+      "pre-reqs": [
+        "CS1110"
+      ],
+      "crosslist": [],
+      "level": 3,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4110",
+      "pre-reqs": [
+        "CS3110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4120",
+      "pre-reqs": [
+        "CS3110",
+        "CS3410"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4160",
+      "pre-reqs": [
+        "CS3110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4320",
+      "pre-reqs": [
+        "CS2110",
+        "CS2800"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4410",
+      "pre-reqs": [
+        "CS3410"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4420",
+      "pre-reqs": [
+        "CS3410"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4450",
+      "pre-reqs": [
+        "CS4410"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4620",
+      "pre-reqs": [
+        "CS2110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4670",
+      "pre-reqs": [
+        "CS2110",
+        "CS2800"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4700",
+      "pre-reqs": [
+        "CS2110",
+        "CS2800"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4732",
+      "pre-reqs": [],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4740",
+      "pre-reqs": [
+        "CS2110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4744",
+      "pre-reqs": [
+        "CS2110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4750",
+      "pre-reqs": [
+        "CS1110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4780",
+      "pre-reqs": [
+        "CS2110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4786",
+      "pre-reqs": [
+        "CS2110",
+        "CS4780"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4787",
+      "pre-reqs": [
+        "CS4780",
+        "CS2110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4810",
+      "pre-reqs": [
+        "CS2800"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4820",
+      "pre-reqs": [
+        "CS2800",
+        "CS3110"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    },
+    {
+      "course": "CS4830",
+      "pre-reqs": [
+        "CS2800"
+      ],
+      "crosslist": [],
+      "level": 4,
+      "prefix": "CS"
+    }
+  ],
+  "links": [
+    {
+      "source": "INFO2300",
+      "target": "INFO1300"
+    },
+    {
+      "source": "INFO2950",
+      "target": "CS1110"
+    },
+    {
+      "source": "INFO3152",
+      "target": "CS2110"
+    },
+    {
+      "source": "INFO3152",
+      "target": "INFO2450"
+    },
+    {
+      "source": "INFO3300",
+      "target": "INFO2300"
+    },
+    {
+      "source": "INFO3300",
+      "target": "CS2110"
+    },
+    {
+      "source": "INFO3350",
+      "target": "CS2110"
+    },
+    {
+      "source": "INFO4120",
+      "target": "CS1110"
+    },
+    {
+      "source": "INFO4152",
+      "target": "INFO3152"
+    },
+    {
+      "source": "INFO4152",
+      "target": "INFO3300"
+    },
+    {
+      "source": "INFO4154",
+      "target": "CS2110"
+    },
+    {
+      "source": "INFO4220",
+      "target": "INFO2040"
+    },
+    {
+      "source": "INFO4220",
+      "target": "CS2800"
+    },
+    {
+      "source": "INFO4250",
+      "target": "INFO1200"
+    },
+    {
+      "source": "INFO4300",
+      "target": "CS2800"
+    },
+    {
+      "source": "INFO4300",
+      "target": "CS2110"
+    },
+    {
+      "source": "INFO4310",
+      "target": "INFO3300"
+    },
+    {
+      "source": "INFO4320",
+      "target": "INFO2300"
+    },
+    {
+      "source": "INFO4340",
+      "target": "INFO2300"
+    },
+    {
+      "source": "INFO4340",
+      "target": "INFO3450"
+    },
+    {
+      "source": "INFO4360",
+      "target": "INFO2450"
+    },
+    {
+      "source": "INFO4360",
+      "target": "INFO2040"
+    },
+    {
+      "source": "INFO4410",
+      "target": "INFO4320"
+    },
+    {
+      "source": "INFO4420",
+      "target": "INFO2450"
+    },
+    {
+      "source": "INFO4420",
+      "target": "INFO2040"
+    },
+    {
+      "source": "INFO4450",
+      "target": "INFO2450"
+    },
+    {
+      "source": "CS2024",
+      "target": "CS1110"
+    },
+    {
+      "source": "CS2110",
+      "target": "CS1110"
+    },
+    {
+      "source": "CS2800",
+      "target": "CS1110"
+    },
+    {
+      "source": "CS3110",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS3410",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS3410",
+      "target": "CS2024"
+    },
+    {
+      "source": "CS3758",
+      "target": "CS1110"
+    },
+    {
+      "source": "CS4110",
+      "target": "CS3110"
+    },
+    {
+      "source": "CS4120",
+      "target": "CS3110"
+    },
+    {
+      "source": "CS4120",
+      "target": "CS3410"
+    },
+    {
+      "source": "CS4160",
+      "target": "CS3110"
+    },
+    {
+      "source": "CS4320",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4320",
+      "target": "CS2800"
+    },
+    {
+      "source": "CS4410",
+      "target": "CS3410"
+    },
+    {
+      "source": "CS4420",
+      "target": "CS3410"
+    },
+    {
+      "source": "CS4450",
+      "target": "CS4410"
+    },
+    {
+      "source": "CS4620",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4670",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4670",
+      "target": "CS2800"
+    },
+    {
+      "source": "CS4700",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4700",
+      "target": "CS2800"
+    },
+    {
+      "source": "CS4740",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4744",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4750",
+      "target": "CS1110"
+    },
+    {
+      "source": "CS4780",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4786",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4786",
+      "target": "CS4780"
+    },
+    {
+      "source": "CS4787",
+      "target": "CS4780"
+    },
+    {
+      "source": "CS4787",
+      "target": "CS2110"
+    },
+    {
+      "source": "CS4810",
+      "target": "CS2800"
+    },
+    {
+      "source": "CS4820",
+      "target": "CS2800"
+    },
+    {
+      "source": "CS4820",
+      "target": "CS3110"
+    },
+    {
+      "source": "CS4830",
+      "target": "CS2800"
+    }
+  ]
+}
