@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>INFO 3300 - Project 1</title>
+        <link rel="stylesheet" href="./css/normalize.css" />
+        <link rel="stylesheet" href="./css/index.css" />
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1 style="text-align: center"> Exploring Trending YouTube Videos By Country </br>
+                Between November 2017 - March 2018 </h1>
+            <h2>INFO 3300 - Project 1</h2>
+            <p>Miguel Roberts, Eric Freitag, Emily Robinson</p>
+        </header>
+
+        <main>
+            <div class="graph-container">
+                <h2 class="graph-label">
+                    Average Views, Comments and Likes of Trending Videos<br />
+                    Grouped By Country
+                </h2>
+
+                <div class="graph barchart">
+                    <svg id="barchart" height="700" width="900"></svg>
+                    <svg id="barchart-legend" height="125" width="200"></svg>
+                </div>
+            </div>
+            <div class="graph-container">
+                <h2 class="graph-label">
+                    Number of Days for a Video to Start Trending
+                </h2>
+
+                <div class="piechart-container">
+                    <div class="piecharts"></div>
+                    <svg id="piechart-legend" height="200" width="200"></svg>
+                </div>
+            </div>
+        </main>
+
+        <script src="./js/index.js" type="module"></script>
+    </body>
+</html>

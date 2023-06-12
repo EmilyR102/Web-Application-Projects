@@ -1,0 +1,22 @@
+data : {
+    country_abbr: string,
+    country_name: string,
+    trending_videos: [video]
+}
+
+video: {
+    category_id: number,
+    channel_title: string,
+    video_id: string,
+    title: string,
+    description: string,
+    tags: string,
+
+    views: number,
+    comment_count: number,
+    likes: number,
+    dislikes: number,
+
+    publish_time: Date,
+    trending_date: Date
+}
