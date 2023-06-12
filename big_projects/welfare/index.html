@@ -1,0 +1,818 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Will Moving to this Country Make You Live Longer?</title>
+
+    <style>
+      body {
+        margin: 1in;
+        font-family: "Avenir", sans-serif;
+      }
+
+      h1{
+        font-family: "Sinhala MN";
+      }
+
+      h2 {
+        font-size: 16pt;
+        font-weight: normal;
+      }
+
+      h3 {
+        text-align: center;
+      }
+
+      .topic{
+        font-weight: bold;
+        text-align: center;
+      }
+
+      p.tip {
+        margin-bottom: 2em;
+      }
+
+      .fi {
+        margin: 0.5em;
+        border: 0.5px solid black;
+      }
+
+      .tick text{
+        font-family: "Avenir", sans-serif;
+
+      }
+
+      .hidden{
+        visibility: hidden;
+      }
+
+      .outline{
+        fill: none;
+      }
+
+      text.title{
+        font-family: "Avenir", sans-serif;
+      }
+      .map_filters{
+        margin-left: 50px;
+      }
+
+      button {
+        margin-right: 25px;
+        height: 30px;
+        width: 120px;
+        color: black;
+        border-radius: 25px;
+        background-color: white;
+        font-family: "Avenir";
+      }
+
+      .test {
+        background-color: "green";
+      }
+
+      .custom-select * {
+        font-family: 'Avenir', sans-serif;
+        width: 100%;
+        border: "0.2px lightgrey";
+        margin-bottom: 1em;
+      }
+
+      #bar-chart {
+        background-color: rgb(185, 207, 255, 0.1);
+        padding: 1em;
+        width: 1050px;
+      }
+
+      div#map {
+        background-color: rgb(185, 207, 255, 0.1);
+        width: 1050px;
+        padding: 1em;
+      }
+
+      circle.swatch {
+        stroke: black;
+        stroke-width: .5px;
+      }
+
+
+    </style>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/css/flag-icons.min.css"/>
+  </head>
+  <body>
+    <h1 class="topic">Project 2</h1>
+    <h2 class="topic">Will Moving to this Country Make You Live Longer?</h2>
+    <h3>
+      Sydney Bednar (sb844), Noorejehan Umar (nu44), Victoria Eshun (vee4),
+      Emily Robinson (err78)
+    </h3>
+
+    <div id="map">
+      <h1>GDP, Population, and Life Expectancy by Country</h1>
+      <h2>This interactive map shows differences in GDP, population and life expectancy across countries.
+        <br>
+        Click through the three buttons to see the trends in the three indicators around the world and to investigate any possible correlations between high GDP and the other two metrics.</h2>
+      <p class="tip">**Hover over a country to view more details.**</p>
+
+    <div id='map_filters'>
+
+    </div>
+    <svg id="graph" width=1000 height=850></svg>
+    </div>
+  </div>
+
+
+    <div id="bar-chart">
+
+      <h1>What are the top 5 causes of death in different countries?</h1>
+      <h2>Select a country by its flag to see whether how rich a country is affects the most common causes of death in it. </h2>
+      <p class="tip">**Hover over a flag to see data for that country.**</p>
+
+        <div id="flags">
+            <div class="custom-select" style="width:200px;">
+                <p><strong>View Countries by GDP:</strong></p>
+                <select name="countries" id="countries">
+                </select>
+            </div>
+
+            <div class="flag" id="flagstop"></div>
+            <div class="flag" id="flagsbot"></div>
+
+        </div>
+
+        <svg id="bar" width=1000 height=700></svg>
+    </div>
+
+    <script>
+      //selecting our svg elements and creating constants to store their dimensions
+      const svg = d3.select("svg#graph");
+      const bar = d3.select("svg#bar");
+      const width = svg.attr("width");
+      const height = svg.attr("height");
+      const margins = { top: 100, right: 10, bottom: 50, left: 50 };
+      const chartWidth = width - margins.left - margins.right;
+      const chartHeight = height - margins.top - margins.bottom;
+
+      // map area
+      const annotations = svg.append("g").attr("id", "annotations");
+      const chartArea = svg.append("g")
+                           .attr("transform", `translate(${margins.left}, ${margins.top})`);
+
+      // bar chart
+      const width2 = bar.attr("width");
+      const height2 = bar.attr("height");
+      const margins2 = { top: 100, right: 10, bottom: 80, left: 200 };
+      const barWidth = width2 - margins2.left - margins2.right;
+      const barHeight = height2 - margins2.top - margins2.bottom;
+      const annBar = bar.append("g").attr("id", "annotations"); //creating a group object to hold our annotations/labels for our bar chart axes
+      const barArea = bar.append("g")
+                         .attr("transform", `translate(${margins2.left}, ${margins2.top})`);
+
+      //adding our x axis label
+
+      annBar.append("text")
+            .text("Number of Deaths")
+            .attr("x", width2/2+20)
+            .attr("y", height2-10)
+            .style("font-size", 14)
+
+
+      //starting our async function to create our visualizations from our datasets
+
+      const requestData = async () => {
+        //loading our csv and json data files and assigning them to variables to use in our code
+        var d = await d3.csv("cause_of_deaths.csv", d3.autoType);
+        var g = await d3.csv("gapminder_fixed.csv", d3.autoType);
+        var c = await d3.json("countries.json", d3.autoType);
+        var m = await d3.json("countries-50m.json", d3.autoType);
+        var flags = await d3.json("flag-icons-main/country.json", d3.autoType);
+
+        console.log(c);
+        console.log(m);
+
+
+        //creating a 2d array to hold our countries and the numerical values for all causes of death in the year 2019
+        let death = d.filter(function (d) {
+          if (d["Country/Territory"] === 'United States') {
+            d['Country/Territory'] = 'United States of America' // changing the name value for the USA to be consistent with our other datasets
+          }
+          if (d["Year"] === 2019) {
+            return d;
+          }
+
+
+        });
+
+        // filtering our gapminder dataset to only include the metric/indicator values for the year 2019
+        let gap = g.filter(function (g) {
+          if (g["Year"] === 2019) {
+            return g;
+          }
+        });
+        console.log("death", death);
+        console.log("gap",gap);
+
+        // inserting country codes for each country from our country code dataset to our gapminder dataset for easy comparison with our TopoJSON dataset
+        c.forEach(country => {gap.forEach(gdp => {
+
+          if (country['alpha-3'].toLowerCase() === gdp.geo){
+            gdp.code = country['country-code'];
+          }
+
+        })});
+
+        //creating different color scales based on three indicators(gdp, life expectancy, and population) for our map to indicate to the user that they are viewing a map colored according to a different metric
+
+        const gdpColor = d3.scaleSequential(d3.interpolatePurples)
+                           .domain(d3.extent(gap, d => d['GDP total']))
+
+        console.log(gdpColor.domain())
+
+        const expColor = d3.scaleSequential(d3.interpolateGreens)
+                           .domain(d3.extent(gap, d => d['Life-Expectancy']))
+
+        console.log(expColor.domain())
+
+        const popColor = d3.scaleSequential(d3.interpolateReds)
+                           .domain(d3.extent(gap, d => d['Population']))
+
+        //COLOR LEGEND FOR MAP
+
+        var legend = d3.legendColor().shape("circle")
+
+          // initial scale for gdp - (we initialize the map showing the gdp distributions)
+          legend.labelFormat(d3.format("$,.0r")).scale(gdpColor);
+
+          let legendG = annotations.append("g")
+                      .attr("transform", "translate(15,40)")
+
+          legendG.call(legend);
+
+
+        //MAP
+        //creating group element for map
+        var map = chartArea.append("g").attr("class", "map");
+
+        //saving topojson data to different variables to use when creating and editing the map projection
+        var countries = topojson.feature(m, m.objects.countries);
+
+        var countriesMesh = topojson.mesh(m, m.objects.countries);
+
+
+        //adding our three metrics/indicators as properties for each country. We took the data from our gapminder dataset and inserted it for each country in the topojson array. We added them by country codes which was the most consistent common key found in both data sets
+        m.objects.countries.geometries.forEach(country => {gap.forEach(gdp => {
+
+          if (country.id == gdp.code){
+            country.properties.gdp = gdp["GDP total"];
+            country.properties.pop = gdp["Population"];
+            country.properties.life = gdp["Life-Expectancy"];
+          }
+
+        })});
+
+        //creating map projection
+        let projection = d3.geoMercator()
+                           .fitSize([chartWidth, 300+chartHeight], countries);
+
+        //creating a variable to store the paths in the projection
+        var path = d3.geoPath().projection(projection);
+
+
+        //creating constants to draw the paths
+        const cFilled = map
+          .selectAll("path.countries")
+          .data(countries.features)
+          .join("path")
+          .attr("id", "ct")
+          .attr("class", "countries outline")
+          .style("fill", "white") //replace with colorscale!
+          .attr("d", path)
+          .on('mouseover',  mouseEntersCountry ) //implement interactivity with mouseover event
+          .on('mouseout',  mouseLeavesCountry );
+
+        //creating the mesh to draw paths/outlines for the countries
+        const cMesh = map
+          .append("path")
+          .datum(countriesMesh)
+          .attr("class", "outline")
+          .style("fill", "none")
+          .style("stroke", "black")
+          .style("stroke-width", 1)
+          .attr("d", path);
+
+        //creating button elements to allow our user to select what indicator they want applied to the map
+        button_names = ['GDP', 'Population', 'Life Expectancy']
+        button_names.forEach(d => {
+            d3.select("div#map_filters")
+              .append("button")
+              .text(d)
+              .attr('id', d.replace(/\s+/g, '-'))
+        });
+
+
+
+        //initializing our map to show the gdp color scale applied to the countries' fills
+        let map_select = map.selectAll("#ct")
+        map_select.style("fill", d => gdpColor(d.properties.gdp));
+
+
+        //styling the selected button to look different from the unselected buttons to indicate to the user that it is selected
+        let gdpClicked = d3.select("button").style("background-color", map_select.style("fill"))
+                       .style("font-weight", "bold")
+                       .style("box-shadow", "3px 5px")
+
+
+        //writing a function to handle click events on our buttons
+        d3.selectAll("button").on("click", function(){
+
+            //selecting the button that has been clicked on
+            selected = d3.select(this).attr("id")
+
+            //changing the map's fill to reflect the metric/indicator that has been selected by applying the appropriate color scale
+            map_select.style("fill", d => {
+                if (d3.select(this).attr("id") === "Population") {
+                    return popColor(d.properties.pop)
+                } else if (d3.select(this).attr("id") === "Life-Expectancy") {
+                    return expColor(d.properties.life)
+                } else if (d3.select(this).attr("id") === "GDP") {
+                    return gdpColor(d.properties.gdp)
+
+                }
+            });
+
+            //changing the style of the selected button
+            d3.select(this).style("background-color", map_select.style("fill"))
+                           .style("font-weight", "bold")
+                           .style("box-shadow", "3px 5px")
+
+            //maintaining the default button styling for buttons that have not been selected
+            others = d3.selectAll("button:not(#" + this.id + ")")
+            others.style("background-color", "")
+                  .style("font-weight", "normal")
+                  .style("box-shadow", "none")
+
+            //conditional statements to change the legend to reflect the currently selected indicator
+            if (d3.select(this).attr("id") === "Population") {
+                legend.scale(popColor)
+                legend.labelFormat(d3.format(",.0r"))
+                legendG.call(legend)
+            } else if (d3.select(this).attr("id") === "Life-Expectancy") {
+                legend.scale(expColor)
+                legend.labelFormat(d3.format(",.3r"))
+                legendG.call(legend)
+            } else if (d3.select(this).attr("id") === "GDP") {
+                legend.scale(gdpColor)
+                legend.labelFormat(d3.format("$,.0r"))
+                legendG.call(legend)
+            }
+
+
+        });
+
+
+        //map hover
+        //creating a mesh to select later when changing the appearance of a selected country on hover
+        var mesh2 =  map.append("path").datum(countriesMesh)
+                     .attr("class","mouseover mesh")
+                     .style("fill", "none")
+                     .style("stroke", "black")
+                     .style("stroke-width", 3)
+                     .attr("d", "");
+
+        //TOOLTIP ON HOVER (to display country data - name, gdp, life expectancy, and population size)
+        //setting constant values for our tooltip width and height
+        let tooltipWidth = 220;
+        let tooltipHeight = 100;
+
+        //creating group element for tooltip
+        let tooltip = map.append("g")
+                        .attr("class","tooltip")
+                        .attr("visibility","hidden");
+
+        //added the rectangle that will act as the label displaying the selected country's data
+        tooltip.append("rect")
+              .attr("fill", "black")
+              .attr("opacity", 0.9)
+              .attr("x", 0)
+              .attr("y", 0)
+              .attr("width",tooltipWidth)
+              .attr("height",tooltipHeight)
+
+        // creating text elements to be selected and dynamically changed when a country is hovered over
+        let txt1 = tooltip.append("text")
+                      .attr("fill", "white")
+                      .attr("width", "100px")
+                      .attr("text-anchor","start")
+                      .attr("alignment-baseline","hanging")
+                      .attr("x", 10)
+                      .attr("y", 12);
+
+        let txt2 = tooltip.append("text")
+                        .attr("fill", "white")
+                        .attr("text-anchor","start")
+                        .attr("alignment-baseline","hanging")
+                        .attr("x", 10)
+                        .attr("y", 32);
+
+        let txt3 = tooltip.append("text")
+                        .attr("fill", "white")
+                        .attr("text-anchor","start")
+                        .attr("alignment-baseline","hanging")
+                        .attr("x", 10)
+                        .attr("y", 52);
+
+        let txt4 = tooltip.append("text")
+                        .attr("fill", "white")
+                        .attr("text-anchor","start")
+                        .attr("alignment-baseline","hanging")
+                        .attr("x", 10)
+                        .attr("y", 72);
+
+
+
+        //function to handle the event of a mouse entering a country's geometric space on the map
+        function mouseEntersCountry(event) {
+          //make tooltip visible
+          tooltip.style("visibility","visible");
+
+          //select current country
+          let country = d3.select(this);
+
+          //save country's data
+          let cData = country.datum().properties;
+
+          let cID = country.datum().id;
+
+          // changes the stroke of the selected country to make it wider than other countries'
+          var meshOver = topojson.mesh(m, m.objects.countries, function(u,v) {return u.id === cID || v.id === cID; });
+
+          mesh2.datum(meshOver).attr("d", path);
+
+          //adding the values for the country name, gdp, life expectancy, and population as the text attribute for each respective text element
+          txt1.text(cData.name)
+              .style("font-weight", "bold")
+              .style("font-family", "Sinhala MN");
+          txt2.text("GDP: "+d3.format("$,r")(cData.gdp));
+          txt3.text("Life Expectancy: "+cData.life+" years");
+          txt4.text("Population: "+d3.format(",r")(cData.pop))
+
+          //positioning the tooltip
+          let xPos = event.screenX;
+          let yPos = event.y;
+
+
+          // transforming the tooltip and making sure it stays within the chart area without getting cut off
+          tooltip.attr("transform", function(){
+            return `translate(${Math.min(xPos, chartWidth-tooltipWidth)},${yPos})`});
+        }
+
+        //a function to handle the event of the mouse leaving a country's domain - resetting everything to normal
+        function mouseLeavesCountry() {
+            tooltip.style("visibility","hidden");
+
+            mesh2.attr("d", "");
+
+        }
+
+        // top 5 countries by GDP
+        var topGDP = gap.sort(function(a, b) {
+            return d3.descending(+a['GDP total'], +b['GDP total']);
+        }).slice(0, 5)
+
+        // bottom 5 countries by GDP
+        var botGDP = gap.sort(function(a, b) {
+            return d3.ascending(+a['GDP total'], +b['GDP total']);
+        }).slice(0, 5)
+
+        // store geocodes for countries above
+        const topGeo = topGDP.map(d => d.geo)
+        const botGeo = botGDP.map(d => d.geo)
+
+        // store top 5 causes for top and bottom GDP countries
+        let topCauses = []
+        let botCauses = []
+        death.forEach((d) => {
+            if (topGeo.includes(d['Code'].toLowerCase())){
+                topCauses.push(d)
+            }
+            else if (botGeo.includes(d['Code'].toLowerCase())){
+                botCauses.push(d)
+            }
+        });
+
+        console.log('top',topCauses)
+        console.log('bot',botCauses)
+
+        // sort these causes in order and keep only 5
+        let top5Cause = []
+        topCauses.forEach((d) => {
+            let keys = Object.keys(d)
+            let vals = Object.values(d).slice(3, d.length)
+
+            // sorts the values
+            let sorted = vals.sort(d3.descending).slice(0, 5)
+
+            // creates row for new df corresponding to country
+            cause = {
+                'name': d['Country/Territory'],
+            }
+
+            // looks for the key based on the value
+            sorted.forEach((val) => {
+                keys.forEach((key) => {
+                    if (d[key] === val){
+                        cause[key] = d[key]
+                    }
+                });
+            });
+            top5Cause.push(cause)
+        });
+
+        // do the same for bottom gdp countries
+        let bot5Cause = []
+        botCauses.forEach((d) => {
+            let keys = Object.keys(d)
+            let vals = Object.values(d).slice(3, d.length)
+
+            // sorts the values
+            let sorted = vals.sort(d3.descending).slice(0, 5)
+
+            // creates row for new df corresponding to country
+            cause = {
+                'name': d['Country/Territory'],
+            }
+
+            // looks for the key based on the value
+            sorted.forEach((val) => {
+                keys.forEach((key) => {
+                    if (d[key] === val){
+                        cause[key] = d[key]
+                    }
+                });
+            });
+            bot5Cause.push(cause)
+        });
+
+        console.log(top5Cause)
+        console.log(bot5Cause)
+
+        //calling functions to fetch top and bottom countries by GDP and storing them in separate constants
+        const topCountries = topGDP.map(d => d.country)
+        const botCountries = botGDP.map(d => d.country)
+
+
+        // labeling countries to be either top or bottom countries by GDP
+        d3.select("select#countries")
+          .append("option")
+          .attr("id", "flagstop")
+          .text("Top GDP")
+        d3.select("select#countries")
+          .append("option")
+          .attr("id", "flagsbot")
+          .text("Bottom GDP")
+
+        // show all flags for top 5 countries by GDP
+        topCountries.forEach((c) => {
+            flags.forEach((d) => {
+                if (d['name']===c){
+                    let flag_div = d3.select("div#flagstop")
+                    flag_div.append("span")
+                          .attr("class", `fi fi-${d['code']}`)
+                          .attr("id", c)
+                          .style("font-size", 40)
+                    flag_div.append("text")
+                          .text(c)
+                          .attr("class", "labels")
+                          .attr("id", c)
+                          .style("font-size", 16)
+                }
+            });
+        });
+
+
+        //showing flags for bottom countries by GDP
+        botCountries.forEach((c) => {
+            flags.forEach((d) => {
+                if (d['name']===c){
+                    let flag_div = d3.select("div#flagsbot")
+                    flag_div.append("span")
+                          .attr("class", `fi fi-${d['code']}`)
+                          .attr("id", c)
+                          .style("font-size", 40)
+                    flag_div.append("text")
+                          .text(c)
+                          .attr("class", "labels")
+                          .attr("id", c)
+                          .style("font-size", 16)
+
+                    flag_div.style("display", "none")
+                }
+            });
+        });
+
+        // selection for bar chart
+        d3.select("select").on("change", function(){
+            var option = d3.select(this).property("value")
+            const bottom = d3.select("div#flagsbot")
+            const top = d3.select("div#flagstop")
+
+            if (option==="Top GDP"){
+                top.style("display", "block")
+                bottom.style("display", "none")
+            }
+            if (option==="Bottom GDP"){
+                bottom.style("display", "block")
+                top.style("display", "none")
+            }
+        });
+
+
+
+// TOP FIVE
+        //creating constants to store values associated with top five countries by GDP
+        let mappedValues = top5Cause.map(d => Object.values(d))
+
+        //fetching extents and creating scales for x- and y- axes
+        const xExtent = d3.extent(mappedValues[0].slice(1))
+        console.log([1,xExtent[1]])
+
+        const xScale = d3.scaleLog()
+                         .domain(xExtent) // showing for china initially
+                         .range([20, barWidth])
+
+        let mappedCauses = top5Cause.map(d => Object.keys(d))
+
+        const yScale = d3.scalePoint()
+                         .domain(mappedCauses[0].slice(1)) // showing for china initially
+                         .range([0, barHeight-50])
+
+        // initializing x- and y- axes for bar chart
+        let yAxis = d3.axisLeft(yScale).ticks(5)
+        let xAxis = d3.axisBottom(xScale).tickFormat(d3.format(".3s"))
+
+// BOTTOM FIVE
+        // creating variables to store the top 5 causes of death and the associated values for bottom five countries by GDP
+        let BotMappedValues = bot5Cause.map(d => Object.values(d))
+
+        let BotMappedCauses = bot5Cause.map(d => Object.keys(d))
+
+
+        // store all possible causes from death dataset
+        let allCauses = death.map(d => Object.keys(d))[0].slice(3)
+
+        const causeScale = d3.scaleOrdinal(d3.interpolateHcl)
+                             .domain(allCauses)
+                             .range(d3.schemeSet3)
+
+        // calling and drawing x- and y- axes for bar chart
+        let yAxisG = annBar.append("g")
+                     .attr("class", "y axis")
+                     .attr("transform","translate("+(margins2.left)+","+margins2.top+")")
+                     .call(yAxis)
+        let xAxisG = annBar.append("g")
+                     .attr("class", "x axis")
+                     .attr("transform","translate("+(margins2.left)+","+(barHeight+margins2.top+20)+")")
+                     .call(xAxis);
+
+        let textG = annBar.append("g")
+                          .attr("transform","translate("+(width2)+","+(20)+")")
+                          .attr("text-anchor", "end")
+
+        let valueG = barArea.append("g")
+
+        // creating a function to dynamically change the extent of the axes, and also display the appropriate country data based on the selected country
+        const updateBars = function(cause, vals, c, option){
+
+
+            cause.forEach((d,i) => {
+
+                if (d['name'] === option){ // only draw bars if data is for the correct country
+                    let minX = d3.extent(vals[i].slice(1))[0]
+
+                    newX = d3.extent(vals[i].slice(1))
+                    newY = c[i].slice(1)
+
+                    yScale.domain(newY);
+                    yAxis.scale(yScale);
+                    yAxisG.transition().call(yAxis) // change y-axis based on the selected country's causes
+
+                    xScale.domain(newX);
+                    xAxis.scale(xScale);
+                    xAxisG.transition().call(xAxis) // change x-axis based on the selected country's causes
+
+                    c[i].slice(1).forEach((key) => {
+
+                        let line = barArea.append("line") // draw a bar for each cause and scale the length using the xScale
+                               .attr("id", option)
+                               .attr("class", key)
+                               .attr("x1", 0 )
+                               .attr("x2", xScale(d[key]) )
+                               .attr("y1", yScale(key) ) // position each bar on the y axis based on the respective cause of death
+                               .attr("y2", yScale(key) )
+                               .style("stroke", causeScale(key))
+                               .style("stroke-width", 50);
+
+
+                        // make sure lines for previously selected countries do not stay on the screen when a new country is selected
+                        d3.selectAll("line")
+                          .style("fill", function(){
+                              if (d3.select(this).attr("id")===option){
+                                  return causeScale(key)
+                              }
+                              else {
+                                  return ""
+                              }
+                           })
+                          .style("stroke-width", function(){
+                               if (d3.select(this).attr("id")===option){
+                                   return 50
+                               }
+                               else {
+                                   return 0
+                               }
+                               });
+                    });
+                }
+            });
+        }
+
+        // changing styling for selected country's flag
+        d3.selectAll("span.fi").on("mouseenter", function(){
+
+            var option = d3.select(this).attr("id")
+
+            // flag selection style
+            d3.selectAll("span.fi")
+              .style("box-shadow", function(){
+                    if (d3.select(this).attr("id")===option){
+                           return "3px 5px"
+                    }
+                    else {
+                           return "none"
+                    }
+            })
+
+            // text bold
+            d3.selectAll("text.labels")
+              .style("font-weight", function(){
+                  if (d3.select(this).attr("id")===option){
+                         return "bold"
+                  }
+                  else {
+                         return "normal"
+                  }
+              })
+
+            // include gdp data
+            let infoText=[]
+            gap.forEach((d, i) => {
+                if (d['country'] === option){
+
+                    infoText.push(" (GDP: "+d3.format("$,r")(d['GDP total'])+")")
+
+                }
+            });
+
+            // country names and gdp values
+            textG.append("text")
+                   .text(option)
+                   .attr("class", "title")
+                   .attr("id", option)
+                   .attr("font-weight", "bold")
+                   .style("font-family", "Sinhala MN")
+                   .append("tspan").text(infoText).attr("dy", 30)
+                                   .attr("x", 0)
+                                   .style("font-size", 16)
+                                   .style("font-family", "Avenir")
+                                   .style("font-weight", "normal")
+
+            // update titles
+            d3.selectAll("text.title")
+              .style("font-size", 24)
+              .attr("visibility", function(){
+                    if (d3.select(this).attr("id")===option){
+                           return ""
+                    }
+                    else {
+                           return "hidden"
+                    }
+              })
+
+            // update bars to reflect the selected country's extents, top 5 causes of death, and draw bars using the cause scale
+            updateBars(top5Cause, mappedValues, mappedCauses, option)
+            updateBars(bot5Cause, BotMappedValues, BotMappedCauses, option)
+
+        })
+
+      };
+      requestData();
+    </script>
+  </body>
+</html>
